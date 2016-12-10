@@ -1,9 +1,6 @@
 package me.fromgate.sunflowerfields;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,6 +44,7 @@ public class SunflowerListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onBoneMealSunFlower(PlayerInteractEvent event) {
         if (Cfg.isAllowedDropOnBoneMeal()) return;
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
         if (event.getClickedBlock() == null) return;
         if (event.getItem() == null || event.getItem().getType() != Material.INK_SACK) return;
         if (event.getItem().getDurability() != 15) return;
@@ -95,6 +93,7 @@ public class SunflowerListener implements Listener {
     @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onSunflowerPlantManually(BlockMultiPlaceEvent event) {
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
         if (Cfg.isAllowedToPlaceSunflower()) return;
         if (event.getBlockPlaced().getType() != Material.DOUBLE_PLANT) return;
         if (event.getBlockPlaced().getData() == 0) {
