@@ -96,8 +96,10 @@ public class SunflowerListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onSunflowerPlantManually(BlockMultiPlaceEvent event) {
         if (Cfg.isAllowedToPlaceSunflower()) return;
-        if (event.getBlockPlaced().getType() != Material.DOUBLE_PLANT && event.getBlockPlaced().getData() != 0) return;
-        event.setCancelled(true);
+        if (event.getBlockPlaced().getType() != Material.DOUBLE_PLANT) return;
+        if (event.getBlockPlaced().getData() == 0) {
+            event.setCancelled(true);
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 name: SunflowerFields
 main: me.fromgate.sunflowerfields.SunflowerFields
-version: 1.0.0
+version: 1.0.1
 author: fromgate, fromgate@gmail.com
 commands:
    sunflower:
@@ -8,4 +8,3 @@ commands:
       description: 
       usage: |
            /sunflower reload
-           /sunflower help
