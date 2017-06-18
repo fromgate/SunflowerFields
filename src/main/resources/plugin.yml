@@ -1,6 +1,6 @@
 name: SunflowerFields
 main: me.fromgate.sunflowerfields.SunflowerFields
-version: 1.0.1
+version: 1.0.2
 author: fromgate, fromgate@gmail.com
 commands:
    sunflower:
