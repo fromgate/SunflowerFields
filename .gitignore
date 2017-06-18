@@ -1,7 +1,7 @@
 .gitignore
 .idea/
 META-INF/
-SunflowerSeeds.iml
-SunflowerSeeds.jardesc
+*.iml
+*.jardesc
 src/test/
 target/
