@@ -1,6 +1,10 @@
 package me.fromgate.sunflowerfields;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -69,9 +73,8 @@ public class Farms {
         File f = new File(SunflowerFields.getPlugin().getDataFolder() + File.separator + "sunflowers.yml");
         if (f.exists()) f.delete();
         if (farms == null || farms.isEmpty()) return;
-        List<String> list = new ArrayList<String>();
-        for (Farm farm : farms)
-            list.add(farm.toString());
+        List<String> list = new ArrayList<>();
+        farms.forEach(farm -> list.add(farm.toString()));
         if (list.isEmpty()) return;
         YamlConfiguration cfg = new YamlConfiguration();
         cfg.set("sunflowers", list);
@@ -163,27 +166,42 @@ public class Farms {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     public static void addSunflowerRecipe() {
         if (!Cfg.ifSeedCraftEnabled()) return;
-        Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
-        Recipe recipe;
-        ShapelessRecipe shp = null;
-        while (it.hasNext()) {
-            recipe = it.next();
-            shp = (recipe instanceof ShapelessRecipe) ? (ShapelessRecipe) recipe : null;
-            if (shp == null) continue;
-            if (shp.getIngredientList().size() != 1) continue;
-            if (shp.getIngredientList().get(0).getDurability() != 0) continue;
-            if (shp.getIngredientList().get(0).getType() != Material.DOUBLE_PLANT) continue;
-            if (shp.getResult().getType() != Material.INK_SACK) continue;
-            it.remove();
-        }
+        removeSunflowerColorRecipe();
         ItemStack sunSeeds = itemByName(Cfg.getSeedName());
         sunSeeds.setAmount(6);
         ShapelessRecipe sunRecipe = new ShapelessRecipe(sunSeeds);
         sunRecipe.addIngredient(Material.DOUBLE_PLANT);
         Bukkit.addRecipe(sunRecipe);
     }
+
+
+    @SuppressWarnings("deprecation")
+    private static void removeSunflowerColorRecipe () {
+        List<Recipe> backup = new ArrayList<>();
+        Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
+        ShapelessRecipe shp = null;
+        while (it.hasNext()) {
+            Recipe recipe = it.next();
+            ItemStack result = recipe.getResult();
+            if (recipe == null) continue;
+            if (recipe instanceof ShapelessRecipe && result.getType() == Material.INK_SACK && result.getData().getData() == 11) {
+                shp = (ShapelessRecipe) recipe;
+                if (shp.getIngredientList().size() == 1) {
+                    ItemStack ingredient = shp.getIngredientList().get(0);
+                    if (ingredient.getDurability() == 0 && ingredient.getType() == Material.DOUBLE_PLANT) {
+                        continue;
+                    }
+                }
+            }
+            backup.add(recipe);
+        }
+        Bukkit.getServer().clearRecipes();
+        backup.forEach(recipe -> Bukkit.getServer().addRecipe(recipe));
+    }
+
 
     private static ItemStack itemByName(String name) {
         ItemStack item = new ItemStack(Material.MELON_SEEDS);
