@@ -45,6 +45,7 @@ public class SunflowerListener implements Listener {
     public void onBoneMealSunFlower(PlayerInteractEvent event) {
         if (Cfg.isAllowedDropOnBoneMeal()) return;
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
+        if (event.getPlayer().hasPermission("sunflower.bonemeal")) return;
         if (event.getClickedBlock() == null) return;
         if (event.getItem() == null || event.getItem().getType() != Material.INK_SACK) return;
         if (event.getItem().getDurability() != 15) return;
@@ -69,8 +70,9 @@ public class SunflowerListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onGrowMelon(BlockGrowEvent event) {
-        if (event.getNewState().getType() == Material.MELON_BLOCK && Farms.isFarmNear(event.getBlock()))
+        if (event.getNewState().getType() == Material.MELON_BLOCK && Farms.isFarmNear(event.getBlock())) {
             event.setCancelled(true);
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -95,6 +97,7 @@ public class SunflowerListener implements Listener {
     public void onSunflowerPlantManually(BlockMultiPlaceEvent event) {
         if (event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
         if (Cfg.isAllowedToPlaceSunflower()) return;
+        if (event.getPlayer().hasPermission("sunflower.plant")) return;
         if (event.getBlockPlaced().getType() != Material.DOUBLE_PLANT) return;
         if (event.getBlockPlaced().getData() == 0) {
             event.setCancelled(true);
